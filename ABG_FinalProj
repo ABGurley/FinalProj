@@ -54,11 +54,11 @@ for i, txt in enumerate(wellID):
 plt.show()
 
 # Some constants?
-K = 350 #ft/day
-S = 0.001
+K = 350 #ft/day  (200-700)
+S = 0.001 #(0.0009-0.0025)
 D = a.Depth_FT
 r = a.Radius_in/12 # put radius into feet
-# t = time since pumping started... in days?
+# t = time since pumping started... in days? K in ft/day
 
 # Define mu function
 mu = ((x-X)**2 + (y-Y)**2)*S/4*K*rj*t # what is x and y???
@@ -79,8 +79,6 @@ def drawdown(Q, K, D, W):
 def u_funk (r, S, K, t):
     u = r**2 * S / (4*K*r*t)
     return (u)
-
-
 
 # Minimize the objective function
 obj = minimize(drawdown,b,args=(X,Y,Dj,rj,),method='Nelder-Mead',tol=1e-6,options={'maxiter':100000})
