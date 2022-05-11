@@ -1,0 +1,89 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue May 10 15:59:33 2022
+
+@author: Ameri Gurley
+
+Final Project
+
+City wants to acquire an existing land with 10 wells 
+Aquifer has hudraulic conductivity, K = 350 ft/day  (Range 200-700)
+Storage coefficient = 0.001 (Range 0.0009-0.0025)
+Well life is 30 years
+
+- Drawdown <= 75% well depth by end of life
+- Outer edge at a minimum, 4 monitoring wells
+- 4 backup wells
+- population 30,000-40,000
+- mean use per capita 100 gpcd +- 15 gcpd
+- meet with 95% efficiency
+- 4 production wells with 6 backup wells  
+- no more than 6 production wells
+
+Estimate annual cost
+"""
+
+from pulp import *
+import numpy as np
+import os
+import pandas as pd
+import matplotlib.pyplot as plt
+
+
+# set working directory
+dir = "C:/Users/astuckle/Dropbox (Personal)/CE 5331 - Optimization/FinalProj" #work
+#dir = "C:/Users/18067/Dropbox (Personal)/CE 5331 - Optimization/MiniProj_03"
+os.chdir(dir)
+
+# Upload well data
+a = pd.read_csv("Well_Data.csv")
+a.columns
+
+# Plot well locations 
+Xwell = a.x_Feet
+Ywell = a.y_Feet
+wellID = a.Well_ID
+
+plt.plot(Xwell, Ywell, "bo")
+plt.xlabel("Well Location x (ft)")
+plt.ylabel("Well Location y (ft)")
+plt.grid()
+plt.title("Well Location Plot")
+for i, txt in enumerate(wellID):
+    plt.annotate(txt, (Xwell[i], Ywell[i]))
+plt.show()
+
+# Some constants?
+K = 350 #ft/day
+S = 0.001
+D = a.Depth_FT
+r = a.Radius_in/12 # put radius into feet
+# t = time since pumping started... in days?
+
+# Define mu function
+mu = ((x-X)**2 + (y-Y)**2)*S/4*K*rj*t # what is x and y???
+
+# Define W(u) Well function
+def integrand (x):
+    return np.exp(-x)/x
+
+# Define integral function
+W = quad(integrand, mu, np.inf)
+
+# Define drawdown function
+def drawdown(Q, K, D, W):
+    dd = (Qj/(4*(np.pi)*K*Dj))*W
+    return (dd)
+
+# Define u function
+def u_funk (r, S, K, t):
+    u = r**2 * S / (4*K*r*t)
+    return (u)
+
+
+
+# Minimize the objective function
+obj = minimize(drawdown,b,args=(X,Y,Dj,rj,),method='Nelder-Mead',tol=1e-6,options={'maxiter':100000})
+obj
+
+
