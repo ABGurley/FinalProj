@@ -1,85 +1,175 @@
 # -*- coding: utf-8 -*-
 """
-Created on Wed Feb 16 18:32:24 2022
+Created on Tue May 10 15:59:33 2022
 
-Lecture whatever we're on now.
+@author: Ameri Gurley
 
-@author: 18067
+Final Project
+
+City wants to acquire an existing land with 10 wells 
+Aquifer has hudraulic conductivity, K = 350 ft/day  (Range 200-700)
+Storage coefficient = 0.001 (Range 0.0009-0.0025)
+Well life is 30 years
+
+- Drawdown <= 75% well depth by end of life
+- Outer edge at a minimum, 4 monitoring wells
+- 4 backup wells
+- population 30,000-40,000
+- mean use per capita 100 gpcd +- 15 gcpd
+- meet with 95% efficiency
+- 4 production wells with 6 backup wells  
+- no more than 6 production wells
+
+Estimate annual cost
 """
 
-# Fitting Greenshields Model
-# v = vf - (vf/kj) * k (y = ax + b)
-
-# Fit using Ordinary Least Squares
-
-# Import Libraries
-
-import pandas as pd
+from pulp import *
 import numpy as np
-from scipy.optimize import minimize
 import os
+import pandas as pd
+import matplotlib.pyplot as plt
+from scipy.integrate import quad
+from scipy.optimize import minimize
+
+# set working directory
+dir = "C:/Users/astuckle/Dropbox (Personal)/CE 5331 - Optimization/FinalProj" #work
+#dir = "C:/Users/18067/Dropbox (Personal)/CE 5331 - Optimization/MiniProj_03"
+os.chdir(dir)
+
+# Upload well data
+a = pd.read_csv("Well_Data.csv")
+a.columns
+
+# Plot well locations 
+Xwell = a.x_Feet
+Ywell = a.y_Feet
+wellID = a.Well_ID
+
+plt.plot(Xwell, Ywell, "bo")
+plt.xlabel("Well Location x (ft)")
+plt.ylabel("Well Location y (ft)")
+plt.grid()
+plt.title("Well Location Plot")
+for i, txt in enumerate(wellID):
+    plt.annotate(txt, (Xwell[i], Ywell[i]))
+plt.show()
+
+# Some constants?
+K = 350 #ft/day  (200-700)
+S = 0.001 #(0.0009-0.0025)
+Dj = a.Depth_FT*.25 # to limit well depth to 75% just make that the allowable depth?
+# Option 2: Dj = 150 which is 75% the shallowest well
+rj = a.Radius_in/12 # put radius into feet
+# t = time since pumping started... in days? K in ft/day
+Q = 3000000/7.48 # gpd converted to ft^3/day
+t = 10980 # 30 years of leap year days
+
+# Define mu function
+#mu = ((x-X)**2 + (y-Y)**2)*S/4*K*rj*t # what is x and y???
+
+# Define W(u) Well function
+def integrand (x):
+    return np.exp(-x)/x
+
+# Define Theis Well function
+def W_funk(u):
+    W = -0.5772 - np.log(u) + u  #http://www.aqtesolv.com/theis.htm#:~:text=The%20Theis%20(1935)%20solution%20(,storativity)%20of%20nonleaky%20confined%20aquifers.
+    return(W)
+
+# Define drawdown function
+def drawdown(Q, K, D, W):
+    dd = (Q/(4*(np.pi)*K*Dj))*W
+    return (dd)
+
+# Define u function
+def u_funk (r, S, K, t):
+    u = r**2 * S / (4*K*r*t)
+    return (u)
+
+W = pd.DataFrame(W_funk(u_funk(rj, S, K, t))).sum()
+
+# Minimize the objective function
+obj = minimize(drawdown,Q,args=(K,Dj,W),method='Nelder-Mead',tol=1e-6,options={'maxiter':100000})
+obj
+
+'''
+# ============================================================================
+# Interval Linear Programming
+# Structure design of linear interval programming
+# Approach 1 of ILP
+# Create an instant problem of LpProblem 
+interv = LpProblem(name='Final_Project', sense=LpMaximize)
+
+# Create decision variables
+x1 = LpVariable('corn', lowBound=0, upBound=None, cat='Continuous') # continuous is default
+x2 = LpVariable('cotton', lowBound=50, upBound=None, cat='Continuous')
+x3 = LpVariable('sorghum', lowBound=0, upBound=None, cat='Continuous')
 
 
-# Traffic Density - Linear Regression ===========================
-# a = coeffients
-def SSE(b, X, Y):
-    Ypred = b[0] + b[1]*X
-    err = (Y - Ypred)
-    ssex = np.sum(err**2)
-    return(ssex)
+# maximize the obj function: 
+interv += 1/2*(500 + 750)*x1 + 1/2*(400 + 500)*x2 + 1/2*(375 + 400)*x3 # Objective function
 
-# find data
-path = "C:/Users/astuckle/Dropbox (Personal)/CE 5331 - Optimization"
-os.chdir(path)
-    
-# read data
-a = pd.read_csv("ruraldensityspeed.csv")  
-X = a["Density"]
-Y = a["Speed"]
+# Subject to the constraints
+alpha=0.20
 
-# minimimize the objective function
-b = [1,1]
-obj = minimize(SSE, b, args = (X, Y), method = "Nelder-Mead")
-print(obj)
+# investment constraint:  [25,40]*x1 + [20,30]*x2 + [12,18]*x3 <= 100000 - 20000 - 15000 - 10000
+interv += 25*x1 + 20*x2 + 12*x3 <= 100000 - 20000 - 15000 - 10000 # 55000
+interv += (55000) + (55000) - ((25+40)*x1 + (20+30)*x2 + (12+18)*x3) >= alpha*((40-25)*x1 + (30-20)*x2 + (18-12)*x3)
+interv += x1 + x2 + x3 == 640 # land constraint
 
-# compute free speed and jam density
-vf = obj.x[0]
-kj = abs(vf/obj.x[1])
-print("No obstruction if traveling at", vf, "mph")
-print("Traffic will come to a stop at", kj, "vehicles")
+# water constraint:  [25,30]*x1 + [18,22]*x2 + [16,18]*x3 <= 18*640 + [15,20]*640
+interv += 25*x1 + 18*x2 + 16*x3 <= 18*640 + 20*640
+interv += (18*640 + 15*640) + (18*640 + 20*640) - ((25+30)*x1 + (18+22)*x2 + (16+18)*x3) >= alpha*(20-15) + 0.5*((30-25)*x1 + (22-18)*x2 + (18-16)*x3)
+
+# The problem data is written to an .lp file
+interv.writeLP("MiniProject3-interval-linear-programming.lp")
+
+# The problem is solved using PuLP's choice of Solver
+interv.solve(solver=GLPK(msg=False))
+
+# The status of the solution is printed to the screen
+print("Status:", LpStatus[interv.status])
+
+# Each of the variables is printed with its optimum value
+for v in interv.variables():
+    print(v.name, "=", v.varValue)
 
 
-# Texas Earthquakes ============================
-# Fitting a Poisson Model to TX Earthquake Data
 
-# find data
-path = "C:/Users/astuckle/Dropbox (Personal)/CE 5331 - Optimization"  # home
-os.chdir(path)
-    
-# read data
-a = pd.read_csv("TXEarthquakects.csv")  
+# Approach 2 of Interval Linear Programming by building for loop for alpha
+interv = LpProblem(name='MiniProject3-interval-linear-programming', sense=LpMaximize)
 
-# define the function to optimize
-def txeqpois(lambdax, X):
-    num1 = np.sum(X)
-    num2 = len(X)
-    LL = np.log(lambdax) * num1 - num2 * lambdax
-    LL = -1 * LL # mult by -1 to return maximum
-    return(LL)
+# Create decision variables
+x1 = LpVariable('corn', lowBound=0, upBound=None, cat='Continuous') # continuous is default
+x2 = LpVariable('cotton', lowBound=50, upBound=None, cat='Continuous')
+x3 = LpVariable('sorghum', lowBound=0, upBound=None, cat='Continuous')
+# alpha = LpVariable("alpha", lowBound=0, upBound=1, cat='Continuous')
 
-# perform optimization
-lambdax = 1
-X = a["Count"]
+# maximize the obj function: [500,750]corn + [400,500]cotton + [375,400]sorghum
+interv += 1/2*(500 + 750)*x1 + 1/2*(400 + 500)*x2 + 1/2*(375 + 400)*x3 # Objective function
 
-LL = minimize(txeqpois, lambdax, args=(X,), method = "Nelder-Mead")
-print(LL)    
+# Subject to the constraints
+# For loop
+for alpha_i in np.arange(0,1.1,0.1):
+    # investment constraint:  [25,40]*x1 + [20,30]*x2 + [12,18]*x3 <= 100000 - 20000 - 15000 - 10000
+    interv += 25*x1 + 20*x2 + 12*x3 <= 100000 - 20000 - 15000 - 10000 # 55000
+    interv += (55000) + (55000) - ((25+40)*x1 + (20+30)*x2 + (12+18)*x3) >= alpha_i*((40-25)*x1 + (30-20)*x2 + (18-12)*x3)
+    interv += x1 + x2 + x3 == 640 # land constraint
+    # water constraint:  [25,30]*x1 + [18,22]*x2 + [16,18]*x3 <= 18*640 + [15,20]*640
+    interv += 25*x1 + 18*x2 + 16*x3 <= 18*640 + 20*640
+    interv += (18*640 + 15*640) + (18*640 + 20*640) - ((25+30)*x1 + (18+22)*x2 + (16+18)*x3) >= alpha_i*(20-15) + 0.5*((30-25)*x1 + (22-18)*x2 + (18-16)*x3)
 
-XX = X[23:36] # just the count data
-print(XX)
 
-aa = a.iloc[23:36] # the year and count data
-print(aa)
+# The problem data is written to an .lp file
+interv.writeLP("MiniProject3-interval-linear-programming.lp")
 
-# run same procedure but with years 2009 through 2021
-LL0921 = minimize(txeqpois, lambdax, args=(XX,), method = "Nelder-Mead")
-print(LL0921) 
+# The problem is solved using PuLP's choice of Solver
+interv.solve(solver=GLPK(msg=False))
+
+# The status of the solution is printed to the screen
+print("Status:", LpStatus[interv.status])
+
+# Each of the variables is printed with its optimum value
+for v in interv.variables():
+    print(v.name, "=", v.varValue)
+'''
