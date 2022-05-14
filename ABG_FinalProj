@@ -217,4 +217,6 @@ for v in prob.variables():
     print(v.name, "=", v.varValue)
 
 # cost is the price per kWH(converted to ft*lb) * efficiency * specific weight of water * flow * machine head  
-cst = 265522*0.75*62.4*Q*#total drawdown 
+DD_tot = DD_1.varValue + DD_2.varValue + DD_3.varValue + DD_4.varValue
+cst = 265522*0.75*62.4*Q * DD_tot
+print("Yearly Expense =", "${:,.2f}".format(cst))
