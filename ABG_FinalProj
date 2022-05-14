@@ -59,7 +59,7 @@ rj = a.Radius_in/12 # put radius into feet
 r = pd.to_numeric(rj)
 Q = 30000*85/7.48*.95 # (lower) gpd converted to ft^3/day
 Q2 = 40000*115/7.48 # (upper)
-t = 366 #10980 # 30 years of leap year days
+t = 1 #10980 # 30 years of leap year days
 
 # Modified Theis Function
 
@@ -88,9 +88,9 @@ dist4 = []
 
 for i in range(0,10,1):
     distt1 = ((Xwell[i]-0)**2 +(Ywell[i]-0)**2)**0.5
-    distt2 = ((Xwell[i]-0)**2 +(Ywell[i]-5000)**2)**0.5
-    distt3 = ((Xwell[i]-5000)**2 +(Ywell[i]-5000)**2)**0.5
-    distt4 = ((Xwell[i]-5000)**2 +(Ywell[i]-0)**2)**0.5
+    distt2 = ((Xwell[i]-0)**2 +(Ywell[i]-5280)**2)**0.5
+    distt3 = ((Xwell[i]-5280)**2 +(Ywell[i]-5280)**2)**0.5
+    distt4 = ((Xwell[i]-5280)**2 +(Ywell[i]-0)**2)**0.5
     
     dist1.append(distt1)
     dist2.append(distt2)
@@ -105,16 +105,16 @@ model = pp.LpProblem (name='Well_Optimize', sense=pp.LpMinimize)
  
 #Variables
 
-P1 = pp.LpVariable("P1", lowBound=0, cat='Continuous') #Pumping from Well 1
-P2 = pp.LpVariable("P2", lowBound=0, cat='Continuous') #Pumping from Well 2
-P3 = pp.LpVariable("P3", lowBound=0, cat='Continuous') #Pumping from Well 3
-P4 = pp.LpVariable("P4", lowBound=0, cat='Continuous') #Pumping from Well 4
-P5 = pp.LpVariable("P5", lowBound=0, cat='Continuous') #Pumping from Well 5
-P6 = pp.LpVariable("P6", lowBound=0, cat='Continuous') #Pumping from Well 6
-P7 = pp.LpVariable("P7", lowBound=0, cat='Continuous') #Pumping from Well 7
-P8 = pp.LpVariable("P8", lowBound=0, cat='Continuous') #Pumping from Well 8
-P9 = pp.LpVariable("P9", lowBound=0, cat='Continuous') #Pumping from Well 9
-P10 = pp.LpVariable("P10", lowBound=0, cat='Continuous') #Pumping from Well 10
+P1 = pp.LpVariable("P1", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 1
+P2 = pp.LpVariable("P2", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 2
+P3 = pp.LpVariable("P3", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 3
+P4 = pp.LpVariable("P4", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 4
+P5 = pp.LpVariable("P5", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 5
+P6 = pp.LpVariable("P6", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 6
+P7 = pp.LpVariable("P7", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 7
+P8 = pp.LpVariable("P8", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 8
+P9 = pp.LpVariable("P9", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 9
+P10 = pp.LpVariable("P10", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 10
 
 
 # Theis values for 4 corners
@@ -217,3 +217,5 @@ P_tot = P1.varValue + P2.varValue + P3.varValue + P4.varValue + P5.varValue + P6
 DD_tot= (P_tot * theis4[9]) / (4*math.pi*K*dist4[9])
 cst = 265522*0.75*62.4*Q * DD_tot
 print("Yearly Expense =", "${:,.2f}".format(cst))
+cst_hr = cst/366/24
+print("Cost per Hour =", "${:,.2f}".format(cst_hr))
