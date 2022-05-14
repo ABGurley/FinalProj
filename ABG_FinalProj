@@ -102,19 +102,20 @@ for i in range(0,10,1):
 
 model = pp.LpProblem (name='Well_Optimize', sense=pp.LpMinimize)
 
+mult = 0.25
  
 #Variables
 
-P1 = pp.LpVariable("P1", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 1
-P2 = pp.LpVariable("P2", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 2
-P3 = pp.LpVariable("P3", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 3
-P4 = pp.LpVariable("P4", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 4
-P5 = pp.LpVariable("P5", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 5
-P6 = pp.LpVariable("P6", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 6
-P7 = pp.LpVariable("P7", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 7
-P8 = pp.LpVariable("P8", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 8
-P9 = pp.LpVariable("P9", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 9
-P10 = pp.LpVariable("P10", lowBound=0, upBound = 0.17*Q, cat='Continuous') #Pumping from Well 10
+P1 = pp.LpVariable("P1", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 1
+P2 = pp.LpVariable("P2", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 2
+P3 = pp.LpVariable("P3", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 3
+P4 = pp.LpVariable("P4", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 4
+P5 = pp.LpVariable("P5", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 5
+P6 = pp.LpVariable("P6", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 6
+P7 = pp.LpVariable("P7", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 7
+P8 = pp.LpVariable("P8", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 8
+P9 = pp.LpVariable("P9", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 9
+P10 = pp.LpVariable("P10", lowBound=0, upBound = mult*Q, cat='Continuous') #Pumping from Well 10
 
 
 # Theis values for 4 corners
@@ -214,8 +215,7 @@ for v in model.variables():
     
 # cost is the price per kWH(converted to ft*lb) * efficiency * specific weight of water * flow * machine head  
 P_tot = P1.varValue + P2.varValue + P3.varValue + P4.varValue + P5.varValue + P6.varValue + P7.varValue + P8.varValue + P9.varValue + P10.varValue
-DD_tot= (P_tot * theis4[9]) / (4*math.pi*K*dist4[9])
-cst = 265522*0.75*62.4*Q * DD_tot
-print("Yearly Expense =", "${:,.2f}".format(cst))
-cst_hr = cst/366/24
-print("Cost per Hour =", "${:,.2f}".format(cst_hr))
+cst = 0.746*P_tot*.1/.75/.9/3960
+#print("Yearly Expense =", "${:,.2f}".format(cst))
+#cst_hr = cst/366/24
+print("Cost per Hour =", "${:,.2f}".format(cst))
