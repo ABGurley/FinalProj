@@ -221,8 +221,9 @@ model += DD_1 <= 150
 model += DD_2 <= 150
 model += DD_3 <= 150
 model += DD_4 <= 150
-model += alpha1 * P1 + alpha2 * P2 + alpha3 * P3 + alpha4 * P4 + alpha5 * P5 + alpha6 * P6 + alpha7 * P7 + alpha8 * P8 + alpha9 * P9 + alpha10 * P10 <= Q
-model += alpha1 + alpha2 + alpha3 + alpha4 + alpha5 + alpha6 + alpha7 + alpha8 + alpha9 + alpha10 <= 6
+#model += alpha1 * P1 + alpha2 * P2 + alpha3 * P3 + alpha4 * P4 + alpha5 * P5 + alpha6 * P6 + alpha7 * P7 + alpha8 * P8 + alpha9 * P9 + alpha10 * P10 == Q
+#model += alpha1 + alpha2 + alpha3 + alpha4 + alpha5 + alpha6 + alpha7 + alpha8 + alpha9 + alpha10 <= 6
+model += P1 + P2 + P3 + P4 + P5 + P6 + P7 + P8 + P9 + P10 <= Q
 
 # the problem data is written to an *.lp file
 model.writeLP("FinalProj.lp")
@@ -233,6 +234,7 @@ for v in model.variables():
     print(v.name, "=", v.varValue)
     
 # cost is the price per kWH(converted to ft*lb) * efficiency * specific weight of water * flow * machine head  
-DD_tot = DD_1.varValue + DD_2.varValue + DD_3.varValue + DD_4.varValue
+P_tot = P1.varValue + P2.varValue + P3.varValue + P4.varValue + P5.varValue + P6.varValue + P7.varValue + P8.varValue + P9.varValue + P10.varValue
+DD_tot= (P_tot * theis4[9]) / (4*math.pi*K*dist4[9])
 cst = 265522*0.75*62.4*Q * DD_tot
 print("Yearly Expense =", "${:,.2f}".format(cst))
