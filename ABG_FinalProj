@@ -142,6 +142,16 @@ theis3 = well_func(r33, S, K, t)
 theis4 = well_func(r44, S, K, t)
 
 #Terms for objective function
+alpha1 = pp.LpVariable("alpha1", 0, 1, "Integer")
+alpha2 = pp.LpVariable("alpha2", 0, 1, "Integer")
+alpha3 = pp.LpVariable("alpha3", 0, 1, "Integer")
+alpha4 = pp.LpVariable("alpha4", 0, 1, "Integer")
+alpha5 = pp.LpVariable("alpha5", 0, 1, "Integer")
+alpha6 = pp.LpVariable("alpha6", 0, 1, "Integer")
+alpha7 = pp.LpVariable("alpha7", 0, 1, "Integer")
+alpha8 = pp.LpVariable("alpha8", 0, 1, "Integer")
+alpha9 = pp.LpVariable("alpha9", 0, 1, "Integer")
+alpha10 = pp.LpVariable("alpha10", 0, 1, "Integer")
 
 #Drawdown in corner 1
 
@@ -207,6 +217,9 @@ DD_4 = DD_4_1 + DD_4_2 + DD_4_3 + DD_4_4 + DD_4_5 + DD_4_6 + DD_4_7 + DD_4_8 + D
 model += DD_1 + DD_2 + DD_3 + DD_4
 
 #Constraints
+#model += DD_1 + DD_2 + DD_3 + DD_4 <= 150
+model += alpha1 * P1 + alpha2 * P2 + alpha3 * P3 + alpha4 * P4 + alpha5 * P5 + alpha6 * P6 + alpha7 * P7 + alpha8 * P8 + alpha9 * P9 + alpha10 * P10 <= Q
+model += alpha1 + alpha2 + alpha3 + alpha4 + alpha5 + alpha6 + alpha7 + alpha8 + alpha9 + alpha10 <= 6
 
 # the problem data is written to an *.lp file
 prob.writeLP("FinalProj.lp")
@@ -215,7 +228,7 @@ model.solve()
 
 for v in prob.variables():
     print(v.name, "=", v.varValue)
-
+    
 # cost is the price per kWH(converted to ft*lb) * efficiency * specific weight of water * flow * machine head  
 DD_tot = DD_1.varValue + DD_2.varValue + DD_3.varValue + DD_4.varValue
 cst = 265522*0.75*62.4*Q * DD_tot
