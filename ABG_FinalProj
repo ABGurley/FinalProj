@@ -57,8 +57,7 @@ Dj = a.Depth_FT*.25 # to limit well depth to 75% just make that the allowable de
 # Option 2: Dj = 150 which is 75% the shallowest well
 rj = a.Radius_in/12 # put radius into feet
 r = pd.to_numeric(rj)
-# t = time since pumping started... in days? K in ft/day
-Q = 3000000/7.48*.95 # (lower) gpd converted to ft^3/day
+Q = 30000*85/7.48*.95 # (lower) gpd converted to ft^3/day
 Q2 = 40000*115/7.48 # (upper)
 t = 366 #10980 # 30 years of leap year days
 
@@ -72,25 +71,13 @@ def well_func(r, S, K, t):
    hi = ((1-G)*(G*G-6*G+12))/(3*G*(2-G)*(2-G)*b)
    q = (20/47)*(u**((31/26)**0.5))
    h = (1/(1+(u**(3/2))))+((hi*q)/(1+q))
-   
-   
+      
    nume = (np.exp(-1*u))*(np.log(1+(G/u)+((1-G)/((h+b*u)*(h+b*u)))))
    deno = G + ((1-G)*(np.exp((-1*u))))
    
    Wu = nume/deno
-   return Wu
+   return (Wu)
 
-W = well_func(r, S, K, t)
-
-# Define drawdown function
-def draw_down(Q, K, Dj, W):
-    num = Q*W
-    p = np.pi
-    den = 4*p*K*Dj
-    dd = num/den
-    return (dd)
-
-ddown = draw_down(Q, K, Dj, W)
 
 # Calculating distances
 
@@ -206,11 +193,12 @@ DD_4 = DD_4_1 + DD_4_2 + DD_4_3 + DD_4_4 + DD_4_5 + DD_4_6 + DD_4_7 + DD_4_8 + D
 
 #Objective Function
 # Figure out what wells to use
-
+'''
 Pumping = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"]
 x = pp.LpVariable.dicts("x", indexs = Pumping, lowBound = 0, upBound = 1, cat = "Integer", indexStart = [])
 model += pp.lpSum([x[i] for i in Pumping]) == 6
-    
+'''
+  
 model += DD_1 + DD_2 + DD_3 + DD_4
 model += (DD_1 + DD_2 + DD_3 + DD_4)*30 <= 150
 model += P1 + P2 + P3 + P4 + P5 + P6 + P7 + P8 + P9 + P10 >= Q
