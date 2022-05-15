@@ -102,7 +102,7 @@ for i in range(0,10,1):
 
 model = pp.LpProblem (name='Well_Optimize', sense=pp.LpMinimize)
 
-mult = 0.17
+mult = 0.25
  
 #Variables
 
@@ -206,11 +206,9 @@ model.solve()
 for v in model.variables():
     print(v.name, "=", v.varValue)
     
-# cost is the price per kWH(converted to ft*lb) * efficiency * specific weight of water * flow * machine head  
+
 P_tot = P1.varValue + P2.varValue + P3.varValue + P4.varValue + P5.varValue + P6.varValue + P7.varValue + P8.varValue + P9.varValue + P10.varValue
-cst = 0.746*P_tot*.1/.75/.9/3960
-#print("Yearly Expense =", "${:,.2f}".format(cst))
-#cst_hr = cst/366/24
+cst = 62.4*P_tot*480/0.75/26552/30000 #cost per capita per hour
 print("Cost per Hour =", "${:,.2f}".format(cst))
 
 # calculate drawdown
