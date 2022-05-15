@@ -79,7 +79,7 @@ def well_func(r, S, K, t):
    return (Wu)
 
 
-# Calculating distances
+# Calculating distances of observation wells
 
 dist1 = []
 dist2 = []
@@ -102,7 +102,7 @@ for i in range(0,10,1):
 
 model = pp.LpProblem (name='Well_Optimize', sense=pp.LpMinimize)
 
-mult = 0.25
+mult = 0.17
  
 #Variables
 
@@ -134,74 +134,67 @@ theis4 = well_func(r44, S, K, t)
 
 #Drawdown in corner 1
 
-DD_1_1 = (P1 * theis1[0]) / (4*math.pi*K*dist1[0]) #Due to well 1
-DD_1_2 = (P2 * theis1[1]) / (4*math.pi*K*dist1[1]) #Due to well 2
-DD_1_3 = (P3 * theis1[2]) / (4*math.pi*K*dist1[2]) #Due to well 3
-DD_1_4 = (P4 * theis1[3]) / (4*math.pi*K*dist1[3]) #Due to well 4
-DD_1_5 = (P5 * theis1[4]) / (4*math.pi*K*dist1[4]) #Due to well 5
-DD_1_6 = (P6 * theis1[5]) / (4*math.pi*K*dist1[5]) #Due to well 6
-DD_1_7 = (P7 * theis1[6]) / (4*math.pi*K*dist1[6]) #Due to well 7
-DD_1_8 = (P8 * theis1[7]) / (4*math.pi*K*dist1[7]) #Due to well 8
-DD_1_9 = (P9 * theis1[8]) / (4*math.pi*K*dist1[8]) #Due to well 9
-DD_1_10 = (P10 * theis1[9]) / (4*math.pi*K*dist1[9]) #Due to well 10
+DD_1_1 = (P1 * theis1[0]) / (4*math.pi*K*Dj[0]) #Due to well 1
+DD_1_2 = (P2 * theis1[1]) / (4*math.pi*K*Dj[1]) #Due to well 2
+DD_1_3 = (P3 * theis1[2]) / (4*math.pi*K*Dj[2]) #Due to well 3
+DD_1_4 = (P4 * theis1[3]) / (4*math.pi*K*Dj[3]) #Due to well 4
+DD_1_5 = (P5 * theis1[4]) / (4*math.pi*K*Dj[4]) #Due to well 5
+DD_1_6 = (P6 * theis1[5]) / (4*math.pi*K*Dj[5]) #Due to well 6
+DD_1_7 = (P7 * theis1[6]) / (4*math.pi*K*Dj[6]) #Due to well 7
+DD_1_8 = (P8 * theis1[7]) / (4*math.pi*K*Dj[7]) #Due to well 8
+DD_1_9 = (P9 * theis1[8]) / (4*math.pi*K*Dj[8]) #Due to well 9
+DD_1_10 = (P10 * theis1[9]) / (4*math.pi*K*Dj[9]) #Due to well 10
 
 DD_1 = DD_1_1 + DD_1_2 + DD_1_3 + DD_1_4 + DD_1_5 + DD_1_6 + DD_1_7 + DD_1_8 + DD_1_9 + DD_1_10
 
 #Drawdown in corner 2
 
-DD_2_1 = (P1 * theis1[0]) / (4*math.pi*K*dist1[0]) #Due to well 1
-DD_2_2 = (P2 * theis2[1]) / (4*math.pi*K*dist2[1]) #Due to well 2
-DD_2_3 = (P3 * theis2[2]) / (4*math.pi*K*dist2[2]) #Due to well 3
-DD_2_4 = (P4 * theis2[3]) / (4*math.pi*K*dist2[3]) #Due to well 4
-DD_2_5 = (P5 * theis2[4]) / (4*math.pi*K*dist2[4]) #Due to well 5
-DD_2_6 = (P6 * theis2[5]) / (4*math.pi*K*dist2[5]) #Due to well 6
-DD_2_7 = (P7 * theis2[6]) / (4*math.pi*K*dist2[6]) #Due to well 7
-DD_2_8 = (P8 * theis2[7]) / (4*math.pi*K*dist2[7]) #Due to well 8
-DD_2_9 = (P9 * theis2[8]) / (4*math.pi*K*dist2[8]) #Due to well 9
-DD_2_10 = (P10 * theis2[9]) / (4*math.pi*K*dist2[9]) #Due to well 10
+DD_2_1 = (P1 * theis1[0]) / (4*math.pi*K*Dj[0]) #Due to well 1
+DD_2_2 = (P2 * theis2[1]) / (4*math.pi*K*Dj[1]) #Due to well 2
+DD_2_3 = (P3 * theis2[2]) / (4*math.pi*K*Dj[2]) #Due to well 3
+DD_2_4 = (P4 * theis2[3]) / (4*math.pi*K*Dj[3]) #Due to well 4
+DD_2_5 = (P5 * theis2[4]) / (4*math.pi*K*Dj[4]) #Due to well 5
+DD_2_6 = (P6 * theis2[5]) / (4*math.pi*K*Dj[5]) #Due to well 6
+DD_2_7 = (P7 * theis2[6]) / (4*math.pi*K*Dj[6]) #Due to well 7
+DD_2_8 = (P8 * theis2[7]) / (4*math.pi*K*Dj[7]) #Due to well 8
+DD_2_9 = (P9 * theis2[8]) / (4*math.pi*K*Dj[8]) #Due to well 9
+DD_2_10 = (P10 * theis2[9]) / (4*math.pi*K*Dj[9]) #Due to well 10
 
 DD_2 = DD_2_1 + DD_2_2 + DD_2_3 + DD_2_4 + DD_2_5 + DD_2_6 + DD_2_7 + DD_2_8 + DD_2_9 + DD_2_10
 
 #Drawdown in corner 3
 
-DD_3_1 = (P1 * theis3[0]) / (4*math.pi*K*dist3[0]) #Due to well 1
-DD_3_2 = (P2 * theis3[1]) / (4*math.pi*K*dist3[1]) #Due to well 2
-DD_3_3 = (P3 * theis3[2]) / (4*math.pi*K*dist3[2]) #Due to well 3
-DD_3_4 = (P4 * theis3[3]) / (4*math.pi*K*dist3[3]) #Due to well 4
-DD_3_5 = (P5 * theis3[4]) / (4*math.pi*K*dist3[4]) #Due to well 5
-DD_3_6 = (P6 * theis3[5]) / (4*math.pi*K*dist3[5]) #Due to well 6
-DD_3_7 = (P7 * theis3[6]) / (4*math.pi*K*dist3[6]) #Due to well 7
-DD_3_8 = (P8 * theis3[7]) / (4*math.pi*K*dist3[7]) #Due to well 8
-DD_3_9 = (P9 * theis3[8]) / (4*math.pi*K*dist3[8]) #Due to well 9
-DD_3_10 = (P10 * theis1[9]) / (4*math.pi*K*dist1[9]) #Due to well 10
+DD_3_1 = (P1 * theis3[0]) / (4*math.pi*K*Dj[0]) #Due to well 1
+DD_3_2 = (P2 * theis3[1]) / (4*math.pi*K*Dj[1]) #Due to well 2
+DD_3_3 = (P3 * theis3[2]) / (4*math.pi*K*Dj[2]) #Due to well 3
+DD_3_4 = (P4 * theis3[3]) / (4*math.pi*K*Dj[3]) #Due to well 4
+DD_3_5 = (P5 * theis3[4]) / (4*math.pi*K*Dj[4]) #Due to well 5
+DD_3_6 = (P6 * theis3[5]) / (4*math.pi*K*Dj[5]) #Due to well 6
+DD_3_7 = (P7 * theis3[6]) / (4*math.pi*K*Dj[6]) #Due to well 7
+DD_3_8 = (P8 * theis3[7]) / (4*math.pi*K*Dj[7]) #Due to well 8
+DD_3_9 = (P9 * theis3[8]) / (4*math.pi*K*Dj[8]) #Due to well 9
+DD_3_10 = (P10 * theis1[9]) / (4*math.pi*K*Dj[9]) #Due to well 10
 
 DD_3 = DD_3_1 + DD_3_2 + DD_3_3 + DD_3_4 + DD_3_5 + DD_3_6 + DD_3_7 + DD_3_8 + DD_3_9 + DD_3_10
 
 #Drawdown in corner 4
 
-DD_4_1 = (P1 * theis4[0]) / (4*math.pi*K*dist4[0]) #Due to well 1
-DD_4_2 = (P2 * theis4[1]) / (4*math.pi*K*dist4[1]) #Due to well 2
-DD_4_3 = (P3 * theis4[2]) / (4*math.pi*K*dist4[2]) #Due to well 3
-DD_4_4 = (P4 * theis4[3]) / (4*math.pi*K*dist4[3]) #Due to well 4
-DD_4_5 = (P5 * theis4[4]) / (4*math.pi*K*dist4[4]) #Due to well 5
-DD_4_6 = (P6 * theis4[5]) / (4*math.pi*K*dist4[5]) #Due to well 6
-DD_4_7 = (P7 * theis4[6]) / (4*math.pi*K*dist4[6]) #Due to well 7
-DD_4_8 = (P8 * theis4[7]) / (4*math.pi*K*dist4[7]) #Due to well 8
-DD_4_9 = (P9 * theis4[8]) / (4*math.pi*K*dist4[8]) #Due to well 9
-DD_4_10 = (P10 * theis4[9]) / (4*math.pi*K*dist4[9]) #Due to well 10
+DD_4_1 = (P1 * theis4[0]) / (4*math.pi*K*Dj[0]) #Due to well 1
+DD_4_2 = (P2 * theis4[1]) / (4*math.pi*K*Dj[1]) #Due to well 2
+DD_4_3 = (P3 * theis4[2]) / (4*math.pi*K*Dj[2]) #Due to well 3
+DD_4_4 = (P4 * theis4[3]) / (4*math.pi*K*Dj[3]) #Due to well 4
+DD_4_5 = (P5 * theis4[4]) / (4*math.pi*K*Dj[4]) #Due to well 5
+DD_4_6 = (P6 * theis4[5]) / (4*math.pi*K*Dj[5]) #Due to well 6
+DD_4_7 = (P7 * theis4[6]) / (4*math.pi*K*Dj[6]) #Due to well 7
+DD_4_8 = (P8 * theis4[7]) / (4*math.pi*K*Dj[7]) #Due to well 8
+DD_4_9 = (P9 * theis4[8]) / (4*math.pi*K*Dj[8]) #Due to well 9
+DD_4_10 = (P10 * theis4[9]) / (4*math.pi*K*Dj[9]) #Due to well 10
 
 DD_4 = DD_4_1 + DD_4_2 + DD_4_3 + DD_4_4 + DD_4_5 + DD_4_6 + DD_4_7 + DD_4_8 + DD_4_9 + DD_4_10
 
 #Objective Function
-# Figure out what wells to use
-'''
-Pumping = ["P1", "P2", "P3", "P4", "P5", "P6", "P7", "P8", "P9", "P10"]
-x = pp.LpVariable.dicts("x", indexs = Pumping, lowBound = 0, upBound = 1, cat = "Integer", indexStart = [])
-model += pp.lpSum([x[i] for i in Pumping]) == 6
-'''
   
 model += DD_1 + DD_2 + DD_3 + DD_4
-model += (DD_1 + DD_2 + DD_3 + DD_4)*30 <= 150
 model += P1 + P2 + P3 + P4 + P5 + P6 + P7 + P8 + P9 + P10 >= Q
 model += P1 + P2 + P3 + P4 + P5 + P6 + P7 + P8 + P9 + P10 <= Q2
 
@@ -219,3 +212,115 @@ cst = 0.746*P_tot*.1/.75/.9/3960
 #print("Yearly Expense =", "${:,.2f}".format(cst))
 #cst_hr = cst/366/24
 print("Cost per Hour =", "${:,.2f}".format(cst))
+
+# calculate drawdown
+
+DD_1_1f = (P1.varValue * theis1[0]) / (4*math.pi*K*Dj[0]) #Due to well 1
+DD_1_2f = (P2.varValue * theis1[1]) / (4*math.pi*K*Dj[1]) #Due to well 2
+DD_1_3f = (P3.varValue * theis1[2]) / (4*math.pi*K*Dj[2]) #Due to well 3
+DD_1_4f = (P4.varValue * theis1[3]) / (4*math.pi*K*Dj[3]) #Due to well 4
+DD_1_5f = (P5.varValue * theis1[4]) / (4*math.pi*K*Dj[4]) #Due to well 5
+DD_1_6f = (P6.varValue * theis1[5]) / (4*math.pi*K*Dj[5]) #Due to well 6
+DD_1_7f = (P7.varValue * theis1[6]) / (4*math.pi*K*Dj[6]) #Due to well 7
+DD_1_8f = (P8.varValue * theis1[7]) / (4*math.pi*K*Dj[7]) #Due to well 8
+DD_1_9f = (P9.varValue * theis1[8]) / (4*math.pi*K*Dj[8]) #Due to well 9
+DD_1_10f = (P10.varValue * theis1[9]) / (4*math.pi*K*Dj[9]) #Due to well 10
+
+DD_1f = DD_1_1f + DD_1_2f + DD_1_3f + DD_1_4f + DD_1_5f + DD_1_6f + DD_1_7f + DD_1_8f + DD_1_9f + DD_1_10f
+
+#Drawdown in corner 2
+
+DD_2_1f = (P1.varValue * theis1[0]) / (4*math.pi*K*Dj[0]) #Due to well 1
+DD_2_2f = (P2.varValue * theis2[1]) / (4*math.pi*K*Dj[1]) #Due to well 2
+DD_2_3f = (P3.varValue * theis2[2]) / (4*math.pi*K*Dj[2]) #Due to well 3
+DD_2_4f = (P4.varValue * theis2[3]) / (4*math.pi*K*Dj[3]) #Due to well 4
+DD_2_5f = (P5.varValue * theis2[4]) / (4*math.pi*K*Dj[4]) #Due to well 5
+DD_2_6f = (P6.varValue * theis2[5]) / (4*math.pi*K*Dj[5]) #Due to well 6
+DD_2_7f = (P7.varValue * theis2[6]) / (4*math.pi*K*Dj[6]) #Due to well 7
+DD_2_8f = (P8.varValue * theis2[7]) / (4*math.pi*K*Dj[7]) #Due to well 8
+DD_2_9f = (P9.varValue * theis2[8]) / (4*math.pi*K*Dj[8]) #Due to well 9
+DD_2_10f = (P10.varValue * theis2[9]) / (4*math.pi*K*Dj[9]) #Due to well 10
+
+DD_2f = DD_2_1f + DD_2_2f + DD_2_3f + DD_2_4f + DD_2_5f + DD_2_6f + DD_2_7f + DD_2_8f + DD_2_9f + DD_2_10f
+
+#Drawdown in corner 3
+
+DD_3_1f = (P1.varValue * theis3[0]) / (4*math.pi*K*Dj[0]) #Due to well 1
+DD_3_2f = (P2.varValue * theis3[1]) / (4*math.pi*K*Dj[1]) #Due to well 2
+DD_3_3f = (P3.varValue * theis3[2]) / (4*math.pi*K*Dj[2]) #Due to well 3
+DD_3_4f = (P4.varValue * theis3[3]) / (4*math.pi*K*Dj[3]) #Due to well 4
+DD_3_5f = (P5.varValue * theis3[4]) / (4*math.pi*K*Dj[4]) #Due to well 5
+DD_3_6f = (P6.varValue * theis3[5]) / (4*math.pi*K*Dj[5]) #Due to well 6
+DD_3_7f = (P7.varValue * theis3[6]) / (4*math.pi*K*Dj[6]) #Due to well 7
+DD_3_8f = (P8.varValue * theis3[7]) / (4*math.pi*K*Dj[7]) #Due to well 8
+DD_3_9f = (P9.varValue * theis3[8]) / (4*math.pi*K*Dj[8]) #Due to well 9
+DD_3_10f = (P10.varValue * theis1[9]) / (4*math.pi*K*Dj[9]) #Due to well 10
+
+DD_3f = DD_3_1f + DD_3_2f + DD_3_3f + DD_3_4f + DD_3_5f + DD_3_6f + DD_3_7f + DD_3_8f + DD_3_9f + DD_3_10f
+
+#Drawdown in corner 4
+
+DD_4_1f = (P1.varValue * theis4[0]) / (4*math.pi*K*Dj[0]) #Due to well 1
+DD_4_2f = (P2.varValue * theis4[1]) / (4*math.pi*K*Dj[1]) #Due to well 2
+DD_4_3f = (P3.varValue * theis4[2]) / (4*math.pi*K*Dj[2]) #Due to well 3
+DD_4_4f = (P4.varValue * theis4[3]) / (4*math.pi*K*Dj[3]) #Due to well 4
+DD_4_5f = (P5.varValue * theis4[4]) / (4*math.pi*K*Dj[4]) #Due to well 5
+DD_4_6f = (P6.varValue * theis4[5]) / (4*math.pi*K*Dj[5]) #Due to well 6
+DD_4_7f = (P7.varValue * theis4[6]) / (4*math.pi*K*Dj[6]) #Due to well 7
+DD_4_8f = (P8.varValue * theis4[7]) / (4*math.pi*K*Dj[7]) #Due to well 8
+DD_4_9f = (P9.varValue * theis4[8]) / (4*math.pi*K*Dj[8]) #Due to well 9
+DD_4_10f = (P10.varValue * theis4[9]) / (4*math.pi*K*Dj[9]) #Due to well 10
+
+DD_4f = DD_4_1f + DD_4_2f + DD_4_3f + DD_4_4f + DD_4_5f + DD_4_6f + DD_4_7f + DD_4_8f + DD_4_9f + DD_4_10f
+
+draw1_1 = P1.varValue * DD_1f / (4 * np.pi * K * Dj[0]) 
+draw1_2 = P2.varValue * DD_1f / (4 * np.pi * K * Dj[1]) 
+draw1_3 = P3.varValue * DD_1f / (4 * np.pi * K * Dj[2]) 
+draw1_4 = P4.varValue * DD_1f / (4 * np.pi * K * Dj[3]) 
+draw1_5 = P5.varValue * DD_1f / (4 * np.pi * K * Dj[4]) 
+draw1_6 = P6.varValue * DD_1f / (4 * np.pi * K * Dj[5]) 
+draw1_7 = P7.varValue * DD_1f / (4 * np.pi * K * Dj[6]) 
+draw1_8 = P8.varValue * DD_1f / (4 * np.pi * K * Dj[7]) 
+draw1_9 = P9.varValue * DD_1f / (4 * np.pi * K * Dj[8]) 
+draw1_10 = P10.varValue * DD_1f / (4 * np.pi * K * Dj[9]) 
+stat1 = draw1_1 + draw1_2 + draw1_3 + draw1_4 + draw1_5 + draw1_6 + draw1_7 + draw1_8 + draw1_9 + draw1_10
+print("Draw Down at check station O_1 is", round(stat1, 2), "ft per year")
+
+draw2_1 = P1.varValue * DD_2f / (4 * np.pi * K * Dj[0]) 
+draw2_2 = P2.varValue * DD_2f / (4 * np.pi * K * Dj[1]) 
+draw2_3 = P3.varValue * DD_2f / (4 * np.pi * K * Dj[2]) 
+draw2_4 = P4.varValue * DD_2f / (4 * np.pi * K * Dj[3]) 
+draw2_5 = P5.varValue * DD_2f / (4 * np.pi * K * Dj[4]) 
+draw2_6 = P6.varValue * DD_2f / (4 * np.pi * K * Dj[5]) 
+draw2_7 = P7.varValue * DD_2f / (4 * np.pi * K * Dj[6]) 
+draw2_8 = P8.varValue * DD_2f / (4 * np.pi * K * Dj[7]) 
+draw2_9 = P9.varValue * DD_2f / (4 * np.pi * K * Dj[8]) 
+draw2_10 = P10.varValue * DD_2f / (4 * np.pi * K * Dj[9]) 
+stat2 = draw2_1 + draw2_2 + draw2_3 + draw2_4 + draw2_5 + draw2_6 + draw2_7 + draw2_8 + draw2_9 + draw2_10
+print("Draw Down at check station O_2 is", round(stat2, 2), "ft per year")
+
+draw3_1 = P1.varValue * DD_3f / (4 * np.pi * K * Dj[0]) 
+draw3_2 = P2.varValue * DD_3f / (4 * np.pi * K * Dj[1]) 
+draw3_3 = P3.varValue * DD_3f / (4 * np.pi * K * Dj[2]) 
+draw3_4 = P4.varValue * DD_3f / (4 * np.pi * K * Dj[3]) 
+draw3_5 = P5.varValue * DD_3f / (4 * np.pi * K * Dj[4]) 
+draw3_6 = P6.varValue * DD_3f / (4 * np.pi * K * Dj[5]) 
+draw3_7 = P7.varValue * DD_3f / (4 * np.pi * K * Dj[6]) 
+draw3_8 = P8.varValue * DD_3f / (4 * np.pi * K * Dj[7]) 
+draw3_9 = P9.varValue * DD_3f / (4 * np.pi * K * Dj[8]) 
+draw3_10 = P10.varValue * DD_3f / (4 * np.pi * K * Dj[9]) 
+stat3 = draw3_1 + draw3_2 + draw3_3 + draw3_4 + draw3_5 + draw3_6 + draw3_7 + draw3_8 + draw3_9 + draw3_10
+print("Draw Down at check station O_3 is", round(stat3, 2), "ft per year")
+
+draw4_1 = P1.varValue * DD_4f / (4 * np.pi * K * Dj[0]) 
+draw4_2 = P2.varValue * DD_4f / (4 * np.pi * K * Dj[1]) 
+draw4_3 = P3.varValue * DD_4f / (4 * np.pi * K * Dj[2]) 
+draw4_4 = P4.varValue * DD_4f / (4 * np.pi * K * Dj[3]) 
+draw4_5 = P5.varValue * DD_4f / (4 * np.pi * K * Dj[4]) 
+draw4_6 = P6.varValue * DD_4f / (4 * np.pi * K * Dj[5]) 
+draw4_7 = P7.varValue * DD_4f / (4 * np.pi * K * Dj[6]) 
+draw4_8 = P8.varValue * DD_4f / (4 * np.pi * K * Dj[7]) 
+draw4_9 = P9.varValue * DD_4f / (4 * np.pi * K * Dj[8]) 
+draw4_10 = P10.varValue * DD_4f / (4 * np.pi * K * Dj[9]) 
+stat4 = draw4_1 + draw4_2 + draw4_3 + draw4_4 + draw4_5 + draw4_6 + draw4_7 + draw4_8 + draw4_9 + draw4_10
+print("Draw Down at check station O_4 is", round(stat4, 2), "ft per year")
